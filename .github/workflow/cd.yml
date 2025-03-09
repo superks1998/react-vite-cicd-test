@@ -2,7 +2,7 @@ name: CD Pipeline
 
 on:
   push:
-    branches: [development, staging, production]
+    branches: [ main ]
 
 jobs:
   deploy-dev:
@@ -16,66 +16,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
-
-      # Nếu bạn đã build ở bước CI và upload artifact, thay thế các bước dưới đây bằng download artifact:
-      - name: Build React App
-        run: npm run build
-
-      - name: Deploy to Development
-        run: |
-          echo "Deploying to Development environment..."
-          # Thêm lệnh deploy thật cho môi trường development
-          
-  deploy-staging:
-    if: github.ref == 'refs/heads/staging'
-    runs-on: ubuntu-latest
-    environment: staging
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+        
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build React App
-        run: npm run build
-
-      - name: Deploy to Staging
-        run: |
-          echo "Deploying to Staging environment..."
-          # Thêm lệnh deploy thật cho môi trường staging
-
-  deploy-prod:
-    if: github.ref == 'refs/heads/production'
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://your-production-url.com  # (Tùy chọn) Định nghĩa URL cho môi trường production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build React App
-        run: npm run build
-
-      - name: Deploy to Production
-        run: |
-          echo "Deploying to Production environment..."
-          # Thêm lệnh deploy thật cho môi trường production
+            branch: gh-pages          # Nhánh để deploy (sẽ tự tạo nếu chưa có)
+            folder: build             # Thư mục chứa kết quả build
+            token: ${{ secrets.GITHUB_TOKEN }}
