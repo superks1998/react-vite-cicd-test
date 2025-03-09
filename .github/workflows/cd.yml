@@ -25,5 +25,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
             branch: gh-pages          # Nhánh để deploy (sẽ tự tạo nếu chưa có)
-            folder: build             # Thư mục chứa kết quả build
+            folder: dist             # Thư mục chứa kết quả build
             token: ${{ secrets.GITHUB_TOKEN }}
