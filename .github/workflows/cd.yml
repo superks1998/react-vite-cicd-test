@@ -5,19 +5,27 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy-dev:
-    if: github.ref == 'refs/heads/main'
+  deploy:
     runs-on: ubuntu-latest
-    environment: development
+    environment: production
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: build-artifact
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-            branch: gh-pages          # Nhánh để deploy (sẽ tự tạo nếu chưa có)
-            folder: build-artifact    # Sử dụng artifact vừa download (hoặc copy sang thư mục nếu cần)
-            token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages          # Nhánh để deploy (sẽ được tạo nếu chưa có)
+          folder: dist              # Thư mục chứa kết quả build (thay đổi nếu cần)
+          token: ${{ secrets.GITHUB_TOKEN }}

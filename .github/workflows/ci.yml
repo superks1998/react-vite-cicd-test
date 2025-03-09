@@ -23,12 +23,3 @@ jobs:
 
       - name: Run ESLint Check
         run: npm run lint
-
-      - name: Build React App
-        run: npm run build
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: dist
