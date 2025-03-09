@@ -10,20 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
         with:
-          node-version: '18'
+          name: build-artifact
 
-      - name: Install dependencies
-        run: npm install
-        
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
             branch: gh-pages          # Nhánh để deploy (sẽ tự tạo nếu chưa có)
-            folder: dist             # Thư mục chứa kết quả build
+            folder: build-artifact    # Sử dụng artifact vừa download (hoặc copy sang thư mục nếu cần)
             token: ${{ secrets.GITHUB_TOKEN }}
